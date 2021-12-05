@@ -1,9 +1,8 @@
 import axios from "axios";
-import cheerio, { Cheerio, CheerioAPI } from "cheerio";
+import cheerio, { CheerioAPI } from "cheerio";
 import { createWriteStream } from "fs";
-import { writeFile } from "fs/promises";
 
-const url = "https://www.vagalume.com.br/top100/albuns/"; // URL we're scraping
+const url = "https://www.vagalume.com.br/top100/albuns/nacional/2021/11/"; // URL we're scraping
 const AxiosInstance = axios.create(); // Create a new Axios Instance
 
 const stream = createWriteStream("songs.txt", { flags: "a" });
@@ -43,6 +42,7 @@ const getAllSongs = async (albumLinks: Array<string>): Promise<SongInfo> => {
         namesMusic.each((_index, element) => {
             const fullMusicName = artist + " " + $(element).text();
             stream.write(fullMusicName + "\n");
+            console.log(fullMusicName);
             allSongs.push(fullMusicName);
         });
         return allSongs;
@@ -53,15 +53,13 @@ const getAllSongs = async (albumLinks: Array<string>): Promise<SongInfo> => {
     return fullMusicNameArray.flat(1);
 };
 
-const wrapper = async (): Promise<void> => {
+export const wrapper = async (): Promise<SongInfo> => {
     const response = await AxiosInstance.get(url);
     const html = response.data; // Get the HTML from the HTTP request
     const $ = cheerio.load(html); // Load the HTML string into cheerio
 
     const albumLinks: Array<string> = getAlbumLinks($);
     const allSongs: SongInfo = await getAllSongs(albumLinks);
-    const file = await writeFile("./songs.txt", allSongs);
     console.log(allSongs.length);
+    return allSongs;
 };
-
-wrapper();
