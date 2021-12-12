@@ -20,6 +20,7 @@
     "dependencies": {
         "axios": "^0.24.0",
         "cheerio": "*",
+        "fp-ts": "^2.11.5",
         "node": "^17.1.0",
         "puppeteer": "^12.0.1",
         "rxjs": "^7.4.0",

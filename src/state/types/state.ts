@@ -1,9 +1,11 @@
 export interface State {
   songName: string;
-  status: "Downloaded" | "Queue" | "Error";
+  id: string | null;
+  stage: "GatheringVagalume" | "GatheringYoutube" | "DownloadingYoutube";
+  status: "Downloaded" | "Queue" | "Error" | "Off";
   error: {
     message: string;
-  };
+  } | null;
 }
 
 export type AppState = Array<State>;

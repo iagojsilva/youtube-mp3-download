@@ -3,8 +3,6 @@ import { BehaviorSubject, concatMap, delay, mergeMap, of } from "rxjs";
 import YoutubeMp3Downloader, {
   IYoutubeMp3DownloaderOptions,
 } from "youtube-mp3-downloader";
-import { downloadQueue$ } from "../../main";
-import { sleep } from "../../utils/sleep";
 
 export type ID = string;
 export type MusicName = string;
@@ -37,23 +35,4 @@ export const downloadOne = (): void => {
     console.log(`[+] ${_data.videoTitle}`);
     downloaded$.next(_data.videoId);
   });
-  downloadQueue$
-    .pipe(
-      concatMap((obs, index) => {
-        return of(obs).pipe(delay(1000));
-      }),
-      mergeMap(async (songMetadata, i) => {
-        const musicID = songMetadata.musicID;
-        if (musicID === undefined) return;
-        console.log(i, `yt-dl == called with ${songMetadata.musicName}`);
-        youtubeDownloader.download(musicID, songMetadata.musicName);
-        await sleep(30000);
-      }, 5)
-    )
-    .subscribe();
-  /* downloadQueue$.subscribe((value) => {
-        const musicID = value.musicID;
-        if (musicID === undefined) return;
-        youtubeDownloader.download(musicID, value.musicName);
-    }); */
 };
