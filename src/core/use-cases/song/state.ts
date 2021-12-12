@@ -1,6 +1,5 @@
 import * as TE from "fp-ts/TaskEither";
 import * as E from "fp-ts/Either";
-import { pipe } from "fp-ts/function";
 import { State } from "../../../state/types/state";
 
 // Signature of our InpureUpdateState function
@@ -14,7 +13,7 @@ type UpdateState = <A>(
 // Our function to update the state
 export const updateState: UpdateState =
   (inpureUpdateState) => (state) => (id) => {
-    return pipe(TE.tryCatch(() => inpureUpdateState(state, id), E.toError));
+    return TE.tryCatch(() => inpureUpdateState(state, id), E.toError);
   };
 
 // Signature of our InpureAppendState function
