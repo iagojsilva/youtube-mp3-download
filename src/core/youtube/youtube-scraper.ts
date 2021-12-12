@@ -1,6 +1,7 @@
 import { ID, MusicName } from "./youtube-downloader";
 import cheerio, { CheerioAPI } from "cheerio";
 import puppeteer from "puppeteer";
+import { createWriteStream } from "fs";
 
 const _url = "https://youtube.com/"; // URL we're scraping
 
@@ -8,6 +9,8 @@ export interface SongMetadata {
     musicID: ID | undefined;
     musicName: MusicName;
 }
+
+const stream = createWriteStream('./songs.txt')
 
 const buildURL = (musicName: string): string =>
     `${_url}results?search_query=${musicName}`;
@@ -26,6 +29,8 @@ const setSongMetadata = ($: CheerioAPI): SongMetadata => {
         const href = extractID($(el).attr("href"));
         const musicID = href ? href.trimStart().trimEnd() : undefined;
         songMetadata = { musicID, musicName };
+        const string = JSON.stringify(songMetadata)
+        stream.write(string + ',\n')
     });
     return songMetadata;
 };
