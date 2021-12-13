@@ -1,5 +1,6 @@
 import * as TE from "fp-ts/TaskEither";
 import * as E from "fp-ts/Either";
+import { SongState } from "../../../state/types";
 
 // Signature of our InpureUpdateState function
 export type InpureGetSongsName<A> = () => Promise<A>;
@@ -15,14 +16,14 @@ export const getSongsName: GetSongsName = (inpureGetSongsName) => {
 };
 
 // Signature of our InpureUpdateState function
-export type InpureGetSongInfo<A> = (songName: string) => Promise<A>;
+export type InpureGetSongInfo<A> = (song: SongState) => Promise<A>;
 
 // Signature of our pure UpdateState function
 export type GetSongInfo = <A>(
   inpureGetSongInfo: InpureGetSongInfo<A>
-) => (songName: string) => TE.TaskEither<Error, A>;
+) => (song: SongState) => TE.TaskEither<Error, A>;
 
 // Our function to update the state
-export const getSongInfo: GetSongInfo = (inpureGetSongInfo) => (songName) => {
-  return TE.tryCatch(() => inpureGetSongInfo(songName), E.toError);
+export const getSongInfo: GetSongInfo = (inpureGetSongInfo) => (song) => {
+  return TE.tryCatch(() => inpureGetSongInfo(song), E.toError);
 };

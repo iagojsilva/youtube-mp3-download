@@ -1,4 +1,4 @@
-export interface State {
+export interface SongState {
   songName: string;
   id: string | null;
   stage: "GatheringVagalume" | "GatheringYoutube" | "DownloadingYoutube";
@@ -8,24 +8,15 @@ export interface State {
   } | null;
 }
 
-export type AppState = Array<State>;
+export const emptySongState: SongState = {
+  songName: "empty-state",
+  id: null,
+  stage: "GatheringVagalume",
+  status: "Off",
+  error: null,
+};
 
-/**
- * [
-  {
-    "songName": "string",
-    "status": "Downloaded",
-    "error": {
-      "message": "string"
-    }
-  },
-  {
-    "songName": "string",
-    "status": "Downloaded",
-    "error": {
-      "message": "string"
-    }
-  }
-]
-
- */
+export type AppState = {
+  songs: Array<SongState>;
+  songsCount: number;
+};
